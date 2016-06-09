@@ -1,0 +1,11 @@
+# 账号密码
+account.txt
+
+# 下载的成绩
+score.html
+
+# 下载的验证码
+validateCode.jpg
+
+# byebug历史
+.byebug_history
