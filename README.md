@@ -1,6 +1,7 @@
 ## 简介
 利用Ruby编写爬虫，自动登陆我们学校的教务系统，获取成绩页面，得到成绩数据，并格式化输出，自动计算绩点等。
 具体原理可参考[我的博客](http://www.jasonsi.com/2016/03/29/3/)
+
 Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannnylo/rtesseract)
 
 ## 使用方式
@@ -12,10 +13,7 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
 2. 安装必需gem
 
   ```
-  sudo gem install rtesseract
-  sudo gem install mini_magick
-  sudo gem install mechanize
-  sudo gem install nokogiri
+  sudo gem install rtesseract mini_magick mechanize nokogiri
   ```
 3. 配置Tesseract的环境
 
@@ -27,12 +25,19 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
   #sudo mv -v eng.traineddata /opt/local/share/tessdata/
   ```
 4. 在同级目录下新建**account.txt**文件，第一行是账号，第二行是密码
+
+  ```
+  142001010101
+  010001
+  ```
 5. 运行**index.rb**
+
   ```
   ruby index.rb -w
   ```
 
 
 ## TODO
-- 从**指导性教学计划**页面获取成绩，可避免得到类似“优秀”、“中等”的成绩，获取确切分数
+- 从**指导性教学计划**页面获取成绩，可避免得到类似“优秀”、“中等”的成绩，以获取确切分数
 - 分析表格，将每学期的成绩分离，以便更友好的输出以及更多的计算功能
+- 尝试编写一键评估功能
