@@ -17,10 +17,7 @@ req.get_score
 score = Score.new
 
 # 格式化打印成绩
-print "课程名　　　　　　　　\t学分\t得分\t绩点\n"
-score.scorelist.each do |x|
-  print x["name"].slice(0,10).concat("　　　　　　　　　　").slice(0,10) + "\t" + x["credit"] + "\t" + x["grade"] + "\t" + x["point"] + "\n"
-  print "--------------------------------------------------\n"
+score.guide_score_list.each do |x|
+  p x
 end
-
-print "必修课绩点为\033[32m" + score.gpa.to_s + "\033[0m\n\n"
+p score.gpas

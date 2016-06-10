@@ -2,7 +2,8 @@
 account.txt
 
 # 下载的成绩
-score.html
+credit_score.html
+guide_score.html
 
 # 下载的验证码
 validateCode.jpg

@@ -1,25 +1,32 @@
 require 'nokogiri'
 
 class Score
-  attr_reader :scorelist, :gpa
+  attr_reader :guide_score_list, :score_list, :gpas
 
-  def initialize(score_file = "score.html")
-    @score_file = score_file
-    parser_score
+  def initialize
+    @score_file = "credit_score.html"
+    @guide_score_file = "guide_score.html"
+    get_score
     get_GPA
   end
 
   private
     def get_GPA (only_required = true)
-      sum_point = 0
-      sum_credit = 0
-      @scorelist.each do |s|
-        if ((s["prop"] != "选修") || !only_required)
-          sum_point += s["point"].to_f * s["credit"].to_f
-          sum_credit += s["credit"].to_f
+      @gpas = []
+      @score_list.each do |s|
+        sum_point = 0
+        sum_credit = 0
+        s.each do |c|
+          if ((c["prop"] != "选修") || !only_required)
+            sum_point += c["point"].to_f * c["credit"].to_f
+            sum_credit += c["credit"].to_f
+          end
         end
+        @gpas << {
+          credit: sum_credit,
+          gpa: (sum_point / sum_credit).round(3)
+        }
       end
-      @gpa = (sum_point / sum_credit).round(3)
     end
 
     def get_point (grade)
@@ -36,7 +43,7 @@ class Score
         else
           9999999
         end
-      else
+      else  #改版后基本用不到下面了
         case grade
         when "优秀"
           5
@@ -52,9 +59,27 @@ class Score
       end
     end
 
+    def get_score
+      @guide_score_list = []
+      page = Nokogiri::HTML(open(@guide_score_file).read,nil,"gbk")
+      subjects = page.css("tr.odd")
+      subjects.each do |m|
+        next if m.children[9].nil? || m.children[9].text.strip.length != 8
+        subject = {}
+        subject["cno"] = m.children[1].text.slice(1..-1).strip
+        subject["name"] = m.children[3].text.slice(1..-1).strip
+        subject["grade"] = m.children[7].text.slice(1..-1).strip
+        subject["date"] = m.children[9].text.slice(1..-1).strip
+        subject["point"] = get_point(subject["grade"]).to_s
+        @guide_score_list << subject
+      end
+      parser_credit # 获取学分列表
+      merge_by_name # 根据课程名称进行合并
+      nest_with_date  # 按照学期存到数组
+    end
 
-    def parser_score
-      @scorelist = []
+    def parser_credit
+      @credit_list = []
       page = Nokogiri::HTML(open(@score_file).read,nil,"gbk")
       subjects = page.css("tr.odd")
       subjects.each do |m|
@@ -63,9 +88,33 @@ class Score
         subject["eng_name"] = m.children[7].text.strip
         subject["credit"] = m.children[9].text.strip
         subject["prop"] = m.children[11].text.strip
-        subject["grade"] = m.children[13].text.strip.slice!(0..-2)# 鬼畜的空白字符
-        subject["point"] = get_point(subject["grade"]).to_s
-        @scorelist << subject
+        @credit_list << subject
+      end
+    end
+
+    def merge_by_name
+      @guide_score_list.each do |g|
+        @credit_list.each do |s|
+          # 如果课程名相同则合并这两个Hash
+          g.merge!(s) if g["name"] == s["name"]
+        end
+      end
+    end
+
+    def nest_with_date
+      @score_list = []
+      res = []
+      z = 0
+      length = @guide_score_list.length
+      @guide_score_list.each_with_index do |s, i|
+        z += 1
+        if s["date"] != @guide_score_list[(i+1) % length]["date"]
+          res << z
+        end
+      end
+      res.length.times do |i|
+        # 按照考试时间将其分为二维数组
+        @score_list << @guide_score_list.slice((i == 0 ? 0 : res[i-1])...res[i])
       end
     end
 

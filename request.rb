@@ -1,7 +1,7 @@
 require "mechanize"
 require 'rtesseract'
 require 'mini_magick'
-# require 'byebug'
+require 'byebug'
 
 class Request
   def initialize(account, password)
@@ -9,14 +9,15 @@ class Request
     @password = password
     @login_url = "http://202.119.113.135/loginAction.do"
     @vcode_url = "http://202.119.113.135/validateCodeAction.do?random=0.666"
-    @grade_url = "http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=qb"
+    @grade_url = "http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=fa"
+    @guide_url = "http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=lnjhqk"
     @vcode_img = "validateCode.jpg"
     login
   end
 
   def get_score
-    score_page = @agent.get(@grade_url).iframe.click
-    score_page.save! "score.html"
+    @agent.get(@guide_url).iframe.click.save! "guide_score.html"
+    @agent.get(@grade_url).iframe.click.save! "credit_score.html"
     # 也可以不用保存文件，直接解析其body
     # page = Nokogiri::HTML(score_page.body,nil,"gbk")
     print "\033[032m成绩已下载成功！\033[0m\n"
