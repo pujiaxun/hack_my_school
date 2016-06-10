@@ -16,8 +16,12 @@ class Request
   end
 
   def get_score
-    @agent.get(@guide_url).iframe.click.save! "guide_score.html"
-    @agent.get(@grade_url).iframe.click.save! "credit_score.html"
+    begin
+      @agent.get(@guide_url).iframe.click.save! "guide_score.html"
+      @agent.get(@grade_url).iframe.click.save! "credit_score.html"
+    rescue
+      puts "可能没有评估，不能获取成绩"
+    end
     # 也可以不用保存文件，直接解析其body
     # page = Nokogiri::HTML(score_page.body,nil,"gbk")
     print "\033[032m成绩已下载成功！\033[0m\n"
