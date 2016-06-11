@@ -1,5 +1,6 @@
 # 账号密码
-account.txt
+account.yml
+email.yml
 
 # 下载的成绩
 credit_score.html

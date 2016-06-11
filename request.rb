@@ -61,7 +61,6 @@ class Request
     end
 
     def identify
-      # option: [:text] 可能需要在类似/usr/share/tesseract-ocr/tessdata/configs下新建text文件
       image = RTesseract.new(@vcode_img, processor: "mini_magick",options: [:text])
       # 将识别的结果去掉空格和换行符
       image.to_s.strip.gsub(' ','')
