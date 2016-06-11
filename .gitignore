@@ -11,3 +11,6 @@ validateCode.jpg
 
 # byebug历史
 .byebug_history
+
+# 下载的成绩
+result/*.yml

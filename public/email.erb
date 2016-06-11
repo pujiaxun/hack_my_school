@@ -1,0 +1,21 @@
+<table>
+  <thead>
+    <th>课程名</th>
+    <th>学分</th>
+    <th>得分</th>
+    <th>绩点</th>
+    <th>课程属性</th>
+  </thead>
+  <tbody>
+    <% @scores.each do |s| %>
+    <tr style="text-align: center;">
+      <td><%= s[:name] %></td>
+      <td><%= s[:credit] %></td>
+      <td><%= s[:grade] %></td>
+      <td><%= s[:point] %></td>
+      <td><%= s[:prop] %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<h4>本学期绩点为<%= @gpa[:gpa] %></h4>

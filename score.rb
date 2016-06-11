@@ -41,9 +41,9 @@ class Score
         when 60..90
           ((s-60) / 5) * 0.5 + 2.0
         when 90..100
-          5
+          5.0
         else
-          9999999
+          9999999.0
         end
       else  #改版后基本用不到下面了
         case grade

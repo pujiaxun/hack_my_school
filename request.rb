@@ -20,11 +20,10 @@ class Request
       @agent.get(@guide_url).iframe.click.save! "temp/guide_score.html"
       @agent.get(@grade_url).iframe.click.save! "temp/credit_score.html"
     rescue
-      puts "可能没有评估，不能获取成绩"
+      raise "NoAccess"
+      puts "\033[31;1m可能没有评估，不能获取成绩!\033[0m"
     end
-    # 也可以不用保存文件，直接解析其body
-    # page = Nokogiri::HTML(score_page.body,nil,"gbk")
-    print "\033[032m成绩已下载成功！\033[0m\n"
+    # puts "\033[032;1m成绩已下载成功！\033[0m"
   end
 
 
@@ -36,23 +35,24 @@ class Request
       # 填入账号密码
       login_form.field_with(name: "zjh").value = @account
       login_form.field_with(name: "mm").value = @password
-      puts "正在登陆"
+      puts "正在登陆#{@account}"
       loop do
         v_code = @agent.get @vcode_url  #下载验证码
         v_code.save! @vcode_img # 保存验证码图片
         v_input = identify  # 识别验证码
-        next if v_input.length != 4 # 如果识别结果长度不为4，则重新请求验证码
         print "."
+        next if v_input.length != 4 # 如果识别结果长度不为4，则重新请求验证码
         login_form.field_with(name: "v_yzm").value = v_input  # 填入验证码
         result_page = @agent.submit login_form  # 提交表单
         result_text = result_page.parser.to_s.encode("UTF-8") # 以UTF-8解析页面
 
         if result_text.include?("密码不正确")
-          print "\033[31m登录失败!请检查账号或密码\033[0m\n"
-          return
+          puts "\n\033[31;1m登录失败!请检查密码！\033[0m"
+          raise "WrongPassword"
         elsif result_text.include?("验证码错误")
           next
         else
+          puts ""
           # TODO: 这里没有详细的判断，暂时只遇到以上两种情况
           break
         end
