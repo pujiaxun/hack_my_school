@@ -36,12 +36,13 @@ class Request
       # 填入账号密码
       login_form.field_with(name: "zjh").value = @account
       login_form.field_with(name: "mm").value = @password
+      puts "正在登陆"
       loop do
         v_code = @agent.get @vcode_url  #下载验证码
         v_code.save! @vcode_img # 保存验证码图片
         v_input = identify  # 识别验证码
         next if v_input.length != 4 # 如果识别结果长度不为4，则重新请求验证码
-
+        print "."
         login_form.field_with(name: "v_yzm").value = v_input  # 填入验证码
         result_page = @agent.submit login_form  # 提交表单
         result_text = result_page.parser.to_s.encode("UTF-8") # 以UTF-8解析页面

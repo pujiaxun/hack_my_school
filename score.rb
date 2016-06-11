@@ -12,7 +12,8 @@ class Score
 
   private
     def get_GPA (only_required = true)
-      @gpas = []
+      # 默认只计算必修课绩点
+      @gpas = [] #存放每个学期的绩点和学分
       @score_list.each do |s|
         sum_point = 0
         sum_credit = 0
@@ -24,7 +25,8 @@ class Score
         end
         @gpas << {
           credit: sum_credit,
-          gpa: (sum_point / sum_credit).round(3)
+          # 可能由于当前学期只出了选修成绩，导致必修课学分为0，加个判断避免除以0
+          gpa: (sum_credit == 0 ? 0 : (sum_point / sum_credit)).round(3)
         }
       end
     end
@@ -105,14 +107,18 @@ class Score
       @score_list = []
       res = []
       z = 0
-      length = @guide_score_list.length
+      second_term = 500...1100  # 还有可能会是补考，算同一学期
+      flag = false
       @guide_score_list.each_with_index do |s, i|
         z += 1
-        # TODO: 此处应该有容错，保证在一个学期内就可以，不必相等
-        if s[:date] != @guide_score_list[(i+1) % length][:date]
-          res << z
+        # 判断后四位是否在第二学期范围内，置标志位，如果不同则换了学期
+        date = s[:date].slice(-4..-1).to_i
+        if flag != second_term.include?(date)
+          res << (z-1)
         end
+        flag = second_term.include?(date)
       end
+      res << z
       res.length.times do |i|
         # 按照考试时间将其分为二维数组
         @score_list << @guide_score_list.slice((i == 0 ? 0 : res[i-1])...res[i])
