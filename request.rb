@@ -11,14 +11,14 @@ class Request
     @vcode_url = "http://202.119.113.135/validateCodeAction.do?random=0.666"
     @grade_url = "http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=fa"
     @guide_url = "http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=lnjhqk"
-    @vcode_img = "validateCode.jpg"
+    @vcode_img = "temp/validateCode.jpg"
     login
   end
 
   def get_score
     begin
-      @agent.get(@guide_url).iframe.click.save! "guide_score.html"
-      @agent.get(@grade_url).iframe.click.save! "credit_score.html"
+      @agent.get(@guide_url).iframe.click.save! "temp/guide_score.html"
+      @agent.get(@grade_url).iframe.click.save! "temp/credit_score.html"
     rescue
       puts "可能没有评估，不能获取成绩"
     end

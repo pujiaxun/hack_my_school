@@ -4,8 +4,8 @@ class Score
   attr_reader :score_list, :gpas
 
   def initialize
-    @score_file = "credit_score.html"
-    @guide_score_file = "guide_score.html"
+    @score_file = "temp/credit_score.html"
+    @guide_score_file = "temp/guide_score.html"
     get_score
     get_GPA
   end

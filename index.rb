@@ -3,7 +3,7 @@ require './score.rb'
 
 begin
   # 读取账号密码
-  profile  = IO.readlines("account.txt")
+  profile  = IO.readlines("public/account.txt")
   account = profile[0].chomp
   password = profile[1].chomp
 rescue
@@ -15,11 +15,19 @@ end
 req = Request.new(account, password)
 req.get_score
 score = Score.new
-
-# 格式化打印成绩
-# score.score_list.each do |x|
-#   p x
+# current_score = score.score_list.dup
+# loop do
+#   req = Request.new(account, password)
+#   req.get_score
+#   score = Score.new
+#   if current_score != score.score_list
+#     current_score = score.score_list.dup
+#     email = Email.new
+#     email.notify_me(current_score.last)
+#   end
+#   sleep(10*60)
 # end
+
 loop do
   print "\n请输入指令选择操作：0.退出 "
   score.score_list.length.times do |i|
