@@ -38,7 +38,8 @@ loop do
     # 读取上次查询的成绩结果
     last_score = YAML.load_file("result/#{account}.yml")
     # 如果这次查询的结果和上次不同，则表示有新的成绩，发送邮件，并更新成绩文件
-    if current_score != last_score
+    # 更新：如果两次查询的交集不等于最近一次查询的结果，则更新，避免学校撤回成绩通知
+    if (current_score & last_score) != current_score
       puts "\033[032;1m有新的成绩！！！\033[0m"
       unless reciever.nil?
         begin
