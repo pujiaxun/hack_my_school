@@ -30,24 +30,30 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
 
   ```yaml
   -
-    - 100000000002  # 学号
-    - 010001  # 密码
-    - xx@xxx.com  # 邮箱
+    account: 100000000001 # 学号
+    password: 010001  # 密码
+    subs_email: xx@xxx.com  # 订阅邮箱
+    subs_name: 宝宝一号  #订阅者姓名，或者昵称，将用于邮件主题
   -
-    - 100000000002
-    - 100002
-    - xx@xxx.com, yy@yyy.com # 可以用逗号隔开多个邮箱
-
+    account: 100000000002
+    password: 100002
+    subs_email: xx@xxx.com, yy@yyy.com  # 订阅邮箱可用逗号隔开多个
+    subs_name: 宝宝二号
+  -
+    account: 100000000003
+    password: 270003
+    subs_email: # 订阅邮箱可留空，但不发送通知，也就没什么意义了
+    subs_name: # 订阅者姓名若留空，邮件主题将不显示姓名
   ```
   ```yaml
-  smtp_server: smtp.xx.com
+  smtp_server: smtp.xx.com  # smtp服务器
   account: xx@xxx.com
   password: xxxxxxxx
   ```
 5. 运行`index.rb`
 
   ```bash
-  ruby index.rb -w
+  ruby index.rb
   ```
 
 

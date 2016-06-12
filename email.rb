@@ -2,7 +2,8 @@ module Email
   require 'mail'
   require 'yaml'
   require 'erb'
-  def send_email(reciever, scores, gpa)
+  
+  def send_email(subs_email, scores, gpa, subs_name)
     email = YAML.load_file("public/email.yml")
     smtp_server = email["smtp_server"]
     account = email["account"]
@@ -18,8 +19,8 @@ module Email
 
     Mail.deliver do
       from     account
-      to       reciever
-      subject  '成绩订阅'
+      to       subs_email
+      subject  "成绩订阅#{"——" + subs_name unless subs_name.nil?}"
       html_part do
         content_type 'text/html; charset=UTF-8'
         body beatify(scores, gpa)

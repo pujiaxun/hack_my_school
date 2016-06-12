@@ -17,9 +17,10 @@ end
 loop do
 
   profile.each do |pro|
-    account = pro[0].to_s
-    password = pro[1].to_s
-    reciever = pro[2].to_s
+    account = pro["account"].to_s
+    password = pro["password"].to_s
+    subs_email = pro["subs_email"]
+    subs_name = pro["subs_name"]
     begin
       req = Request.new(account, password)
       req.get_score
@@ -41,15 +42,17 @@ loop do
     # 更新：如果两次查询的交集不等于最近一次查询的结果，则更新，避免学校撤回成绩通知
     if (current_score & last_score) != current_score
       puts "\033[032;1m有新的成绩！！！\033[0m"
-      unless reciever.nil?
+      unless subs_email.nil?
         begin
-          send_email(reciever, current_score.last, gpas.last)
+          send_email(subs_email, current_score.last, gpas.last, subs_name)
         rescue
           puts "\033[31;1m邮件发送失败，请检查邮箱是否正确!\033[0m"
           next
         end
       end
       File.open("result/#{account}.yml", "wb") {|f| YAML.dump(current_score, f) }
+    else
+      puts "未查询到新成绩"
     end
   end
 
