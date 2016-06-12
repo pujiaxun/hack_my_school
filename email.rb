@@ -19,7 +19,7 @@ module Email
     Mail.deliver do
       from     account
       to       reciever
-      subject  '本学期的成绩已更新'
+      subject  '成绩订阅'
       html_part do
         content_type 'text/html; charset=UTF-8'
         body beatify(scores, gpa)

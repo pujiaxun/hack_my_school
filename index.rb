@@ -55,5 +55,5 @@ loop do
 
   puts "开始睡觉，睡上#{SLEEP_TIME/60}分钟"
   sleep(SLEEP_TIME)
-  puts "\n睡醒了接着干#{Time.new.strftime("%Y-%m-%d %H:%M")}"
+  puts "\n睡醒了接着干 #{Time.new.strftime("%Y-%m-%d %H:%M")}"
 end
