@@ -25,7 +25,7 @@ loop do
       req = Request.new(account, password)
       req.get_score
       score = Score.new
-    rescue
+    rescue Exception=>e
       # 顾全大局，直接跳过防止中断程序
       next
     end

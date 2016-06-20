@@ -21,8 +21,8 @@ class Request
       @agent.get(@grade_url).iframe.click.save! "temp/credit_score.html"
       print "登陆成功 "
     rescue
-      raise "NoAccess"
       puts "\033[31;1m可能没有评估，不能获取成绩!\033[0m"
+      raise "NoAccess"
     end
     # puts "\033[032;1m成绩已下载成功！\033[0m"
   end
