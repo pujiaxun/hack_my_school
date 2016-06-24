@@ -10,6 +10,12 @@ class Score
     get_GPA
   end
 
+  def is_new?(last_score)
+    last_name = last_score.last.collect {|s| s[:name]}
+    current_name = @score_list.last.collect {|s| s[:name]}
+    (current_name & last_name) != current_name
+  end
+
   private
     def get_GPA (only_required = true)
       # 默认只计算必修课绩点

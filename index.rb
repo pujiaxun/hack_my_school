@@ -6,13 +6,6 @@ require './email.rb'
 include Email
 SLEEP_TIME = 7 * 60
 
-def new_score?(last_score, current_score)
-  last_name = last_score.last.collect {|s| s[:name]}
-  current_name = current_score.last.collect {|s| s[:name]}
-  (current_name & last_name) != current_name
-end
-
-
 begin
   # 读取账号密码
   profile = YAML.load_file("public/account.yml")
@@ -47,7 +40,7 @@ loop do
     # 如果这次查询的结果和上次不同，则表示有新的成绩，发送邮件，并更新成绩文件
     # 更新：如果两次查询的交集不等于最近一次查询的结果，则更新，避免学校撤回成绩通知
     # if (current_score & last_score) != current_score
-    if new_score?(last_score, current_score)
+    if score.is_new?(last_score)
       puts "\033[032;1m有新的成绩！！！\033[0m"
       unless subs_email.nil?
         begin
