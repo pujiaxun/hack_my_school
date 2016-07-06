@@ -2,7 +2,7 @@ module Email
   require 'mail'
   require 'yaml'
   require 'erb'
-  
+
   def send_email(subs_email, scores, gpa, subs_name)
     email = YAML.load_file("public/email.yml")
     smtp_server = email["smtp_server"]
@@ -32,6 +32,10 @@ module Email
   private
     def beatify(scores, gpa)
       @scores = scores
+      @scores.sort! do |a, b|
+        comp = (a[:prop] <=> b[:prop])
+        comp.zero? ? (b[:credit] <=> a[:credit]) : comp
+      end
       @gpa = gpa
       erb = ERB.new(File.read("public/email.erb"))
       erb.result(binding())
