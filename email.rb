@@ -4,10 +4,10 @@ module Email
   require 'erb'
 
   def send_email(subs_email, scores, gpa, subs_name)
-    email = YAML.load_file("public/email.yml")
-    smtp_server = email["smtp_server"]
-    account = email["account"]
-    password = email["password"]
+    email = YAML.load_file('public/email.yml')
+    smtp_server = email['smtp_server']
+    account = email['account']
+    password = email['password']
 
     Mail.defaults do
       delivery_method :smtp,  address: smtp_server,
@@ -20,7 +20,7 @@ module Email
     Mail.deliver do
       from     account
       to       subs_email
-      subject  "成绩订阅#{"——" + subs_name unless subs_name.nil?}"
+      subject  "成绩订阅#{'——' + subs_name unless subs_name.nil?}"
       html_part do
         content_type 'text/html; charset=UTF-8'
         body beatify(scores, gpa)
@@ -30,6 +30,7 @@ module Email
   end
 
   private
+
     def beatify(scores, gpa)
       @scores = scores
       @scores.sort! do |a, b|
@@ -37,8 +38,7 @@ module Email
         comp.zero? ? (b[:credit] <=> a[:credit]) : comp
       end
       @gpa = gpa
-      erb = ERB.new(File.read("public/email.erb"))
-      erb.result(binding())
+      erb = ERB.new(File.read('public/email.erb'))
+      erb.result(binding)
     end
-
 end

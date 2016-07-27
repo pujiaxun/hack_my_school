@@ -4,92 +4,76 @@ class Score
   attr_reader :score_list, :gpas
 
   def initialize
-    @score_file = "temp/credit_score.html"
-    @guide_score_file = "temp/guide_score.html"
+    @score_file = 'temp/credit_score.html'
+    @guide_score_file = 'temp/guide_score.html'
+    @credit_list = []
+    @guide_score_list = []
+    @gpas = []
+    @score_list = []
     get_score
     get_GPA
   end
 
-  def is_new?(last_score)
-    last_name = last_score.last.collect {|s| s[:name]}
-    current_name = @score_list.last.collect {|s| s[:name]}
+  def update?(last_score)
+    last_name = last_score.last.map { |s| s[:name] }
+    current_name = @score_list.last.map { |s| s[:name] }
     (current_name & last_name) != current_name
   end
 
   private
-    def get_GPA (only_required = true)
-      # 默认只计算必修课绩点
-      @gpas = [] #存放每个学期的绩点和学分
+
+    def get_GPA(only_required = true)
+      # Only compute required course by default
       @score_list.each do |s|
         sum_point = 0
         sum_credit = 0
         s.each do |c|
-          if ((c[:prop] != "选修") || !only_required)
+          unless c[:prop] == '选修' && only_required
             sum_point += c[:point].to_f * c[:credit].to_f
             sum_credit += c[:credit].to_f
           end
         end
         @gpas << {
           credit: sum_credit,
-          # 可能由于当前学期只出了选修成绩，导致必修课学分为0，加个判断避免除以0
-          gpa: (sum_credit == 0 ? 0 : (sum_point / sum_credit)).round(3)
+          # Avoid 0 / 0 (Maybe only optional courses occur in this semester)
+          gpa: (sum_credit.zero? ? 0 : (sum_point / sum_credit)).round(3)
         }
       end
     end
 
-    def get_point (grade)
-      #如果只包含了数字和小数点
-      if grade.match(/[^\d\.]+/).nil?
-        s = grade.to_i
-        case s
-        when 0...60
-          0
-        when 60..90
-          ((s-60) / 5) * 0.5 + 2.0
-        when 90..100
-          5.0
-        else
-          9999999.0
-        end
-      else  #改版后基本用不到下面了
-        case grade
-        when "优秀"
-          5
-        when "良好"
-          4
-        when "中等"
-          3
-        when "及格"
-          2
-        else
-          0
-        end
+    def get_point(grade)
+      # only numbers and dots
+      s = grade.to_i
+      case s
+      when 0...60
+        0
+      when 60..90
+        ((s - 60) / 5) * 0.5 + 2.0
+      when 90..100
+        5.0
+      else
+        raise 'WrongScores'
       end
     end
 
     def get_score
-      @guide_score_list = []
-      page = Nokogiri::HTML(open(@guide_score_file).read,nil,"gbk")
-      subjects = page.css("tr.odd")
+      page = Nokogiri::HTML(open(@guide_score_file).read, nil, 'gbk')
+      subjects = page.css('tr.odd')
       subjects.each do |m|
         next if m.children[9].nil? || m.children[9].text.strip.length != 8
-        subject = {}
-        subject[:cno] = m.children[1].text.slice(1..-1).strip
-        subject[:name] = m.children[3].text.slice(1..-1).strip
-        subject[:grade] = m.children[7].text.slice(1..-1).strip
-        subject[:date] = m.children[9].text.slice(1..-1).strip
-        subject[:point] = get_point(subject[:grade]).to_s
-        @guide_score_list << subject
+        vals = [1, 3, 7, 9].map{ |i| m.children[i].text.slice(1..-1).strip }
+        vals << get_point(vals[2]).to_s
+        keys = [:cno, :name, :grade, :date, :point]
+        @guide_score_list << Hash[keys.zip vals]
       end
-      parser_credit # 获取学分列表
-      merge_by_name # 根据课程名称进行合并
-      nest_with_date  # 按照学期存到数组
+      parser_credit # Get credit list of courses
+      merge_by_name # Merge by course's name
+      nest_with_date # Store into an 2D Array based on different semesters
     end
 
     def parser_credit
-      @credit_list = []
-      page = Nokogiri::HTML(open(@score_file).read,nil,"gbk")
-      subjects = page.css("tr.odd")
+      page = Nokogiri::HTML(open(@score_file).read, nil, 'gbk')
+      subjects = page.css('tr.odd')
       subjects.each do |m|
         subject = {}
         subject[:name] = m.children[5].text.strip
@@ -103,32 +87,29 @@ class Score
     def merge_by_name
       @guide_score_list.each do |g|
         @credit_list.each do |s|
-          # 如果课程名相同则合并这两个Hash
-          g.merge!(s) if g[:name] == s[:name]
+          # Merge two hashes if courses' names are same.
+          g.merge! s if g[:name] == s[:name]
         end
       end
     end
 
     def nest_with_date
-      @score_list = []
       res = []
       z = 0
-      second_term = 500...1100  # 还有可能会是补考，算同一学期
+      second_semester = 500...1100
       flag = false
-      @guide_score_list.each_with_index do |s, i|
+      @guide_score_list.each do |s|
         z += 1
-        # 判断后四位是否在第二学期范围内，置标志位，如果不同则换了学期
+        # The flag is true when second and false when first semester.
+        # Change semester when flag changed.
         date = s[:date].slice(-4..-1).to_i
-        if flag != second_term.include?(date)
-          res << (z-1)
-        end
-        flag = second_term.include?(date)
+        res << (z - 1) unless flag == second_semester.include?(date)
+        flag = second_semester.include?(date)
       end
       res << z
       res.length.times do |i|
-        # 按照考试时间将其分为二维数组
-        @score_list << @guide_score_list.slice((i == 0 ? 0 : res[i-1])...res[i])
+        # Divide scores based on semester
+        @score_list << @guide_score_list.slice((i.zero? ? 0 : res[i - 1])...res[i])
       end
     end
-
 end
