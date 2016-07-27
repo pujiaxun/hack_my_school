@@ -1,0 +1,44 @@
+GEM
+  remote: https://gems.ruby-china.org/
+  specs:
+    domain_name (0.5.20160615)
+      unf (>= 0.0.5, < 1.0.0)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
+    mechanize (2.7.4)
+      domain_name (~> 0.5, >= 0.5.1)
+      http-cookie (~> 1.0)
+      mime-types (>= 1.17.2, < 3)
+      net-http-digest_auth (~> 1.1, >= 1.1.1)
+      net-http-persistent (~> 2.5, >= 2.5.2)
+      nokogiri (~> 1.6)
+      ntlm-http (~> 0.1, >= 0.1.1)
+      webrobots (>= 0.0.9, < 0.2)
+    mime-types (2.99.2)
+    mini_magick (4.5.1)
+    mini_portile2 (2.1.0)
+    net-http-digest_auth (1.4)
+    net-http-persistent (2.9.4)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
+    ntlm-http (0.1.1)
+    pkg-config (1.1.7)
+    rtesseract (2.0.0)
+      nokogiri
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
+    webrobots (0.1.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  mechanize
+  mini_magick
+  nokogiri
+  rtesseract
+
+BUNDLED WITH
+   1.12.5
