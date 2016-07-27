@@ -15,6 +15,8 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
 2. 安装必需gem
 
   ```bash
+  bundle install
+  # OR
   sudo gem install rtesseract mini_magick mechanize nokogiri mail
   ```
 3. 配置Tesseract的环境(可能不需要)
@@ -30,18 +32,18 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
 
   ```yaml
   -
-    account: 100000000001 # 学号
-    password: 010001  # 密码
+    account: '100000000001' # 学号
+    password: '010001'  # 密码
     subs_email: xx@xxx.com  # 订阅邮箱
     subs_name: 宝宝一号  #订阅者姓名，或者昵称，将用于邮件主题
   -
-    account: 100000000002
-    password: 100002
+    account: '100000000002'
+    password: '100002'
     subs_email: xx@xxx.com, yy@yyy.com  # 订阅邮箱可用逗号隔开多个
     subs_name: 宝宝二号
   -
-    account: 100000000003
-    password: 270003
+    account: '100000000003'
+    password: '270003'
     subs_email: # 订阅邮箱可留空，但不发送通知，也就没什么意义了
     subs_name: # 订阅者姓名若留空，邮件主题将不显示姓名
   ```

@@ -10,3 +10,6 @@ gem 'mini_magick'
 
 # HTML/XML parser
 gem 'nokogiri'
+
+# Send Email
+gem 'mail'

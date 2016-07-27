@@ -60,7 +60,7 @@ class Score
       page = Nokogiri::HTML(open(@guide_score_file).read, nil, 'gbk')
       subjects = page.css('tr.odd')
       subjects.each do |m|
-        next if m.children[9].nil? || m.children[9].text.strip.length != 8
+        next unless m.children[9] && m.children[9].text.strip.length == 8
         vals = [1, 3, 7, 9].map{ |i| m.children[i].text.slice(1..-1).strip }
         vals << get_point(vals[2]).to_s
         keys = [:cno, :name, :grade, :date, :point]
