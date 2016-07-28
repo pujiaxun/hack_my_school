@@ -21,12 +21,12 @@ loop do
     subs_email = pro['subs_email']
     subs_name = pro['subs_name']
     begin
-      req = Request.new(account, password)
-      req.get_score
+      # req = Request.new(account, password)
+      # req.download_score
       score = Score.new
     rescue => e
       # Just print the error message for running constanly.
-      puts 'LoginError:' + e.message
+      p e
       next
     end
     current_score = score.score_list

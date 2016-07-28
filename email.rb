@@ -1,3 +1,4 @@
+# Including methods for sending emails
 module Email
   require 'mail'
   require 'yaml'

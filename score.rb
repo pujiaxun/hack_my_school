@@ -1,5 +1,6 @@
 require 'nokogiri'
 
+# This class is response for parsing HTML into scores and calculating GPA
 class Score
   attr_reader :score_list, :gpas
 
@@ -10,8 +11,7 @@ class Score
     @guide_score_list = []
     @gpas = []
     @score_list = []
-    get_score
-    get_GPA
+    calc_gpa
   end
 
   def update?(last_score)
@@ -22,65 +22,58 @@ class Score
 
   private
 
-    def get_GPA(only_required = true)
+    def calc_gpa(only_required = true)
+      init_score
       # Only compute required course by default
       @score_list.each do |s|
-        sum_point = 0
-        sum_credit = 0
-        s.each do |c|
-          unless c[:prop] == '选修' && only_required
-            sum_point += c[:point].to_f * c[:credit].to_f
-            sum_credit += c[:credit].to_f
-          end
+        sum = s.inject([0,0]) do |temp, c|
+          next temp if c[:prop] == '选修' && only_required
+          [temp.first + c[:point] * c[:credit], temp.last + c[:credit]]
         end
         @gpas << {
-          credit: sum_credit,
+          credit: sum.last,
           # Avoid 0 / 0 (Maybe only optional courses occur in this semester)
-          gpa: (sum_credit.zero? ? 0 : (sum_point / sum_credit)).round(3)
+          gpa: (sum.last.zero? ? 0 : (sum.first / sum.last)).round(3)
         }
       end
     end
 
-    def get_point(grade)
-      # only numbers and dots
-      s = grade.to_i
-      case s
-      when 0...60
-        0
-      when 60..90
-        ((s - 60) / 5) * 0.5 + 2.0
-      when 90..100
-        5.0
-      else
-        raise 'WrongScores'
-      end
-    end
-
-    def get_score
-      page = Nokogiri::HTML(open(@guide_score_file).read, nil, 'gbk')
-      subjects = page.css('tr.odd')
-      subjects.each do |m|
-        next unless m.children[9] && m.children[9].text.strip.length == 8
-        vals = [1, 3, 7, 9].map{ |i| m.children[i].text.slice(1..-1).strip }
-        vals << get_point(vals[2]).to_s
-        keys = [:cno, :name, :grade, :date, :point]
-        @guide_score_list << Hash[keys.zip vals]
-      end
-      parser_credit # Get credit list of courses
+    def init_score
+      parse_score
+      parse_credit # Get credit list of courses
       merge_by_name # Merge by course's name
       nest_with_date # Store into an 2D Array based on different semesters
     end
 
-    def parser_credit
+    def calc_point(grade)
+      # only numbers and dots
+      res = ((grade.to_i - 60) / 5) * 0.5 + 2.0
+      return 0 if res < 2
+      return 5.0 if res > 5
+      res
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def parse_score
+      page = Nokogiri::HTML(open(@guide_score_file).read, nil, 'gbk')
+      subjects = page.css('tr.odd')
+      subjects.each do |m|
+        next unless m.children[9] && m.children[9].text.strip.length == 8
+        vals = [1, 3, 7, 9].map { |i| m.children[i].text.slice(1..-1).strip }
+        vals << calc_point(vals[2])
+        keys = [:cno, :name, :grade, :date, :point]
+        @guide_score_list << Hash[keys.zip vals]
+      end
+    end
+
+    def parse_credit
       page = Nokogiri::HTML(open(@score_file).read, nil, 'gbk')
       subjects = page.css('tr.odd')
       subjects.each do |m|
-        subject = {}
-        subject[:name] = m.children[5].text.strip
-        subject[:eng_name] = m.children[7].text.strip
-        subject[:credit] = m.children[9].text.strip
-        subject[:prop] = m.children[11].text.strip
-        @credit_list << subject
+        vals = [5, 7, 9, 11].map { |i| m.children[i].text.strip }
+        vals[2] = vals[2].to_f
+        keys = [:name, :eng_name, :credit, :prop]
+        @credit_list << Hash[keys.zip vals]
       end
     end
 

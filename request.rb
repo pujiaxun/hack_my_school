@@ -3,6 +3,7 @@ require 'rtesseract'
 require 'mini_magick'
 require 'byebug'
 
+# this class is response for crawing data from the specified url
 class Request
   def initialize(account, password)
     @account = account
@@ -15,7 +16,7 @@ class Request
     login
   end
 
-  def get_score
+  def download_score
     begin
       @agent.get(@guide_url).iframe.click.save! 'temp/guide_score.html'
       @agent.get(@grade_url).iframe.click.save! 'temp/credit_score.html'
@@ -57,7 +58,6 @@ class Request
           break
         end
       end
-
     end
 
     def identify
