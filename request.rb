@@ -3,7 +3,7 @@ require 'rtesseract'
 require 'mini_magick'
 require 'byebug'
 
-# this class is response for crawing data from the specified url
+# This class is response for crawing data from the specified url
 class Request
   def initialize(account, password)
     @account = account

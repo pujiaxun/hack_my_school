@@ -11,7 +11,7 @@ class Score
     @guide_score_list = []
     @gpas = []
     @score_list = []
-    calc_gpa
+    init_tasks
   end
 
   def update?(last_score)
@@ -23,12 +23,11 @@ class Score
   private
 
     def calc_gpa(only_required = true)
-      init_score
       # Only compute required course by default
       @score_list.each do |s|
-        sum = s.inject([0,0]) do |temp, c|
-          next temp if c[:prop] == '选修' && only_required
-          [temp.first + c[:point] * c[:credit], temp.last + c[:credit]]
+        sum = s.inject([0,0]) do |res, c|
+          next res if c[:prop] == '选修' && only_required
+          [res.first + c[:point] * c[:credit], res.last + c[:credit]]
         end
         @gpas << {
           credit: sum.last,
@@ -38,11 +37,13 @@ class Score
       end
     end
 
-    def init_score
-      parse_score
+    def init_tasks
+      # A serial tasks to do.
+      parse_score # Get score list from HTML
       parse_credit # Get credit list of courses
       merge_by_name # Merge by course's name
       nest_with_date # Store into an 2D Array based on different semesters
+      calc_gpa # Calculate GPA into a list of all semesters
     end
 
     def calc_point(grade)
