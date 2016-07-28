@@ -87,22 +87,12 @@ class Score
     end
 
     def nest_with_date
-      res = []
-      z = 0
-      second_semester = 500...1100
-      flag = false
-      @guide_score_list.each do |s|
-        z += 1
-        # The flag is true when second and false when first semester.
-        # Change semester when flag changed.
-        date = s[:date].slice(-4..-1).to_i
-        res << (z - 1) unless flag == second_semester.include?(date)
-        flag = second_semester.include?(date)
-      end
-      res << z
-      res.length.times do |i|
-        # Divide scores based on semester
-        @score_list << @guide_score_list.slice((i.zero? ? 0 : res[i - 1])...res[i])
+      # Magic rather than readable
+      @score_list = @guide_score_list.inject([[@guide_score_list.first]]) do |res, s|
+        l = (5_01...11_01).include?(res.last.last[:date].slice(-4..-1).to_i)
+        n = (5_01...11_01).include?(s[:date].slice(-4..-1).to_i)
+        l ^ n ? res << Array[s] : res.last << s
+        res
       end
     end
 end
