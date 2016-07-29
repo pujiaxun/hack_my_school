@@ -25,7 +25,7 @@ class Score
     def calc_gpa(only_required = true)
       # Only compute required course by default
       @score_list.each do |s|
-        sum = s.inject([0,0]) do |res, c|
+        sum = s.inject([0, 0]) do |res, c|
           next res if c[:prop] == '选修' && only_required
           [res.first + c[:point] * c[:credit], res.last + c[:credit]]
         end
@@ -82,7 +82,7 @@ class Score
       @guide_score_list.each do |g|
         @credit_list.each do |s|
           # Merge two hashes if courses' names are same.
-          g.merge! s if g[:name] == s[:name]
+          break g.merge! s if g[:name] == s[:name]
         end
       end
     end
