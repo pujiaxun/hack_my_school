@@ -80,10 +80,10 @@ class Score
 
     def merge_by_name
       @guide_score_list.each do |g|
-        @credit_list.each do |s|
-          # Merge two hashes if courses' names are same.
-          break g.merge! s if g[:name] == s[:name]
-        end
+        # Merge two hashes if courses' names are same.
+        target_index = @credit_list.find_index{ |s| g[:name] == s[:name] }
+        g.merge! @credit_list[target_index]
+        @credit_list.delete_at target_index
       end
     end
 
