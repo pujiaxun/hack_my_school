@@ -12,17 +12,17 @@ class Request
     @vcode_url = 'http://202.119.113.135/validateCodeAction.do?random=0.666'
     @grade_url = 'http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=fa'
     @guide_url = 'http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=lnjhqk'
-    @vcode_img = 'temp/validateCode.jpg'
+    @vcode_img = "temp/validateCode_#{account}.jpg"
     login
   end
 
   def download_score
     begin
-      @agent.get(@guide_url).iframe.click.save! 'temp/guide_score.html'
-      @agent.get(@grade_url).iframe.click.save! 'temp/credit_score.html'
-      print '登陆成功 '
+      @agent.get(@guide_url).iframe.click.save! "temp/guide_score_#{@account}.html"
+      @agent.get(@grade_url).iframe.click.save! "temp/credit_score_#{@account}.html"
+      print "#{@account}登陆成功 "
     rescue
-      puts "\033[31;1m可能没有评估，不能获取成绩!\033[0m"
+      puts "\033[31;1m#{@account} 可能没有评估，不能获取成绩!\033[0m"
       raise 'NoAccess'
     end
   end
@@ -35,15 +35,15 @@ class Request
       login_form = login_page.forms[0]
       login_form.field_with(name: 'zjh').value = @account
       login_form.field_with(name: 'mm').value = @password
-      puts "正在登陆#{@account}"
+      puts "#{@account}正在登陆"
       loop do
         # Download captcha picture
         v_code = @agent.get @vcode_url
         v_code.save! @vcode_img
         # Identify captcha
         v_input = identify
-        print '#'
         next if v_input.length != 4
+        
         login_form.field_with(name: 'v_yzm').value = v_input
         result_page = @agent.submit login_form
         result_text = result_page.parser.to_s.encode('UTF-8')
