@@ -90,6 +90,7 @@ class Score
     def nest_with_date
       # Magic rather than readable
       @score_list = @guide_score_list.inject([[@guide_score_list.first]]) do |res, s|
+        next res if s == @guide_score_list.first
         l = (5_01...11_01).include?(res.last.last[:date].slice(-4..-1).to_i)
         n = (5_01...11_01).include?(s[:date].slice(-4..-1).to_i)
         l ^ n ? res << Array[s] : res.last << s
