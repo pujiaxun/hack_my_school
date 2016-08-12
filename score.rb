@@ -14,10 +14,10 @@ class Score
     init_tasks
   end
 
-  def update?(last_score)
+  def diff(last_score)
     last_name = last_score.last.map { |s| s[:name] }
     current_name = @score_list.last.map { |s| s[:name] }
-    (current_name & last_name) != current_name
+    current_name - (current_name & last_name)
   end
 
   private

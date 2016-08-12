@@ -1,29 +1,33 @@
 <% @border_color = "rgb(182, 182, 182)" %>
 
 <style type="text/css">
-  table{
-  	font-family: verdana,arial,sans-serif;
-  	font-size:11px;
-  	color:#333333;
-  	border-width: 1px;
-  	border-color: <%= @border_color %>;
-  	border-collapse: collapse;
+  table {
+    font-family: verdana,arial,sans-serif;
+    font-size: 11px;
+    color: #333;
+    border-width: 1px;
+    border-color: <%= @border_color %>;
+    border-collapse: collapse;
   }
   table th {
-  	border-width: 1px;
-  	padding: 5px;
-  	border-style: solid;
-  	border-color: <%= @border_color %>;
+    border-width: 1px;
+    padding: 5px;
+    border-style: solid;
+    border-color: <%= @border_color %>;
   }
   table td {
-  	border-width: 1px;
-  	padding: 5px;
-  	border-style: solid;
-  	border-color: <%= @border_color %>;
+    border-width: 1px;
+    padding: 5px;
+    border-style: solid;
+    border-color: <%= @border_color %>;
   }
-  tr{
+  tr {
     text-align: center;
   }
+  .diff {
+    font-weight: bold;
+  }
+
 </style>
 
 <h4>本学期绩点为：<%= @gpa[:gpa] %></h4>
@@ -37,7 +41,7 @@
   </thead>
   <tbody>
     <% @scores.each do |s| %>
-    <tr>
+    <tr class="<%= 'diff' if @diff.include? s[:name] %>" >
       <td><%= s[:name] %></td>
       <td><%= s[:credit] %></td>
       <td><%= s[:grade] %></td>

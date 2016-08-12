@@ -42,11 +42,12 @@ loop do
     last_score = YAML.load_file("result/#{account}.yml")
     # Update it if (current_score & last_score) != current_score
     # Judge by method update? in order to avoid scores being withdrawed.
-    if score.update?(last_score)
+    diff = score.diff(last_score)
+    if diff.any?
       puts "\033[032;1m有新的成绩！！！\033[0m"
       unless subs_email.nil?
         begin
-          send_email(subs_email, current_score.last, gpas.last, subs_name)
+          send_email(subs_email, current_score.last, gpas.last, subs_name, diff)
         rescue
           puts "\033[31;1m邮件发送失败，请检查邮箱是否正确!\033[0m"
           next
