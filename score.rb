@@ -47,11 +47,18 @@ class Score
     end
 
     def calc_point(grade)
-      # only numbers and dots
-      res = ((grade.to_i - 60) / 5) * 0.5 + 2.0
-      return 0 if res < 2
-      return 5.0 if res > 5
-      res
+      case grade
+      when '优秀' then 5.0
+      when '良好' then 4.5
+      when '中等' then 3.5
+      when '及格' then 2.5
+      when '不及格' then 0
+      else
+        res = ((grade.to_i - 60) / 5) * 0.5 + 2.0
+        return 0 if res < 2
+        return 5.0 if res > 5
+        res
+      end
     end
 
     # rubocop:disable Metrics/AbcSize
@@ -60,9 +67,8 @@ class Score
       subjects = page.css('tr.odd')
       subjects.each do |m|
         next unless m.children[9] && m.children[9].text.strip.length == 8
-        vals = [1, 3, 7, 9].map { |i| m.children[i].text.slice(1..-1).strip }
-        vals << calc_point(vals[2])
-        keys = [:cno, :name, :grade, :date, :point]
+        vals = [1, 3, 9].map { |i| m.children[i].text.gsub("\u00A0", "").strip }
+        keys = [:cno, :name, :date]
         @guide_score_list << Hash[keys.zip vals]
       end
     end
@@ -71,9 +77,10 @@ class Score
       page = Nokogiri::HTML(open(@score_file).read, nil, 'gbk')
       subjects = page.css('tr.odd')
       subjects.each do |m|
-        vals = [5, 7, 9, 11].map { |i| m.children[i].text.strip }
+        vals = [5, 7, 9, 11, 13].map { |i| m.children[i].text.gsub("\u00A0", "").strip }
         vals[2] = vals[2].to_f
-        keys = [:name, :eng_name, :credit, :prop]
+        vals << calc_point(vals[4])
+        keys = [:name, :eng_name, :credit, :prop, :grade, :point]
         @credit_list << Hash[keys.zip vals]
       end
     end
