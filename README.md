@@ -52,12 +52,13 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
   account: xx@xxx.com
   password: xxxxxxxx
   ```
-5. 运行`index.rb`
+5. 运行`index.rb`，挂着一直跑，有新成绩就会发邮件通知
 
   ```bash
   ruby index.rb
   ```
 
+6. 另外，可单独运行`get_GPA.rb`，直接获取所有GPA和课程成绩
 
 ## TODO
 
