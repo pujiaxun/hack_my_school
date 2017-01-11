@@ -1,6 +1,7 @@
 GEM
   remote: https://gems.ruby-china.org/
   specs:
+    byebug (9.0.6)
     domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
     http-cookie (1.0.2)
@@ -37,6 +38,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   mail
   mechanize
   mini_magick
@@ -44,4 +46,4 @@ DEPENDENCIES
   rtesseract
 
 BUNDLED WITH
-   1.12.5
+   1.13.7

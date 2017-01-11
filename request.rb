@@ -12,6 +12,7 @@ class Request
     @vcode_url = 'http://202.119.113.135/validateCodeAction.do?random=0.666'
     @grade_url = 'http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=fa'
     @guide_url = 'http://202.119.113.135/gradeLnAllAction.do?type=ln&oper=lnjhqk'
+    @schedule_url = 'http://202.119.113.135/xkAction.do?actionType=6'
     @vcode_img = 'temp/validateCode.jpg'
     login
   end
@@ -21,10 +22,16 @@ class Request
       @agent.get(@guide_url).iframe.click.save! 'temp/guide_score.html'
       @agent.get(@grade_url).iframe.click.save! 'temp/credit_score.html'
       print '登陆成功 '
-    rescue
+    rescue => e
+      p e
       puts "\033[31;1m可能没有评估，不能获取成绩!\033[0m"
       raise 'NoAccess'
     end
+  end
+
+  def download_schedule
+    @agent.get(@schedule_url).save! 'temp/schedule.html'
+    puts '下载课程表成功'
   end
 
   private

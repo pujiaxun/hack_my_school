@@ -6,6 +6,9 @@ email.yml
 credit_score.html
 guide_score.html
 
+# 下载的课程表
+schedule.html
+
 # 下载的验证码
 validateCode.jpg
 
@@ -14,3 +17,6 @@ validateCode.jpg
 
 # 下载的成绩
 result/*.yml
+
+# macOS产生的日志文件
+.DS_STORE

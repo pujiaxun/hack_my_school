@@ -13,3 +13,6 @@ gem 'nokogiri'
 
 # Send Email
 gem 'mail'
+
+# Byebug
+gem 'byebug'
