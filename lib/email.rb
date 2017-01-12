@@ -16,21 +16,28 @@ class Email
     subject = "成绩订阅#{'——' + subs_name unless subs_name.empty?}"
     content = render_score(scores, gpa, diff)
     send_out(subs_email, subject, content)
-    puts "\033[032;1m邮件已发送！\033[0m"
+    puts "\033[032;1m成绩已发送到邮箱！\033[0m"
   end
 
   def send_GPA(subs_email, scores, gpas, subs_name = '')
     subject = "成绩订阅#{'——' + subs_name unless subs_name.empty?}"
     content = render_GPA(scores, gpas)
     send_out(subs_email, subject, content)
-    puts "\033[032;1m邮件已发送！\033[0m"
+    puts "\033[032;1mGPA已发送到邮箱！\033[0m"
+  end
+
+  def send_calendar(subs_email, ics_path, subs_name = '')
+    subject = "课程表订阅#{'——' + subs_name unless subs_name.empty?}"
+    content = "请下载附件使用日历app打开，如果问是否新建日历请选择YES。"
+    send_out(subs_email, subject, content, ics_path)
+    puts "\033[032;1m课程表已发送到邮箱！\033[0m"
   end
 
   private
 
-    def send_out(subs_email, subject, content)
+    def send_out(subs_email, subject, content, attachment = nil)
       account = @account
-      Mail.deliver do
+      mail = Mail.new do
         from     account
         to       subs_email
         subject  subject
@@ -39,6 +46,9 @@ class Email
           body content
         end
       end
+      mail.add_file(attachment) if attachment
+      mail.delivery_method :sendmail
+      mail.deliver
     end
 
     def init_email

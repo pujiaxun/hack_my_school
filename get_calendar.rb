@@ -4,8 +4,6 @@ require './lib/schedule.rb'
 require './lib/email.rb'
 require './lib/icalendar.rb'
 
-include Email
-
 START_TIME_OF_CLASS = [8 * 3600,
                       8 * 3600 + 50 * 60,
                       9 * 3600 + 50 * 60,
@@ -53,6 +51,8 @@ end
 
 start_weekday = start_day.wday
 
+mailer = Email.new
+
 profiles.each do |pro|
   account = pro['account'].to_s
   password = pro['password'].to_s
@@ -67,6 +67,7 @@ profiles.each do |pro|
 
   icalendar = ICalendar.new
   courses.each do |f|
+    # I found that some courses have two apart phases in a semester
     f[:week].each do |w|
       start_week = w.split('-').first.to_i
       end_week = w.split('-').last.to_i
@@ -92,5 +93,8 @@ profiles.each do |pro|
     end
   end
 
-  puts icalendar.publish
+  File.open("result/schedule#{account}.ics", 'w') do |f|
+    f.syswrite(icalendar.publish)
+  end
+  mailer.send_calendar(subs_email, "result/schedule#{account}.ics", subs_name)
 end

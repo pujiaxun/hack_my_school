@@ -17,6 +17,7 @@ validateCode.jpg
 
 # 下载的成绩
 result/*.yml
+result/*.ics
 
 # macOS产生的日志文件
 .DS_STORE
