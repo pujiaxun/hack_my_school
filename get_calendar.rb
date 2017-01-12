@@ -29,7 +29,6 @@ END_TIME_OF_CLASS = [8 * 3600 + 45 * 60,
                     20 * 3600 + 05 * 60,
                     20 * 3600 + 55 * 60]
 
-
 begin
   # Load accounts and password.
   profiles = YAML.load_file('public/account.yml')
@@ -56,8 +55,8 @@ mailer = Email.new
 profiles.each do |pro|
   account = pro['account'].to_s
   password = pro['password'].to_s
-  subs_email = pro['subs_email']
-  subs_name = pro['subs_name']
+  subs_email = pro['subs_email'].to_s
+  subs_name = pro['subs_name'].to_s
 
   req = Request.new(account, password)
   req.download_schedule
@@ -93,8 +92,9 @@ profiles.each do |pro|
     end
   end
 
-  File.open("result/schedule#{account}.ics", 'w') do |f|
+  ics_path = "result/schedule#{account}.ics"
+  File.open(ics_path, 'w') do |f|
     f.syswrite(icalendar.publish)
   end
-  mailer.send_calendar(subs_email, "result/schedule#{account}.ics", subs_name)
+  mailer.send_calendar(subs_email, ics_path, subs_name)
 end

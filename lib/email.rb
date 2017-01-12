@@ -13,22 +13,22 @@ class Email
   end
 
   def send_score(subs_email, scores, gpa, subs_name = '', diff = [])
-    subject = "成绩订阅#{'——' + subs_name unless subs_name.empty?}"
+    subject = "成绩订阅 #{subs_name}"
     content = render_score(scores, gpa, diff)
     send_out(subs_email, subject, content)
     puts "\033[032;1m成绩已发送到邮箱！\033[0m"
   end
 
   def send_GPA(subs_email, scores, gpas, subs_name = '')
-    subject = "成绩订阅#{'——' + subs_name unless subs_name.empty?}"
+    subject = "成绩订阅 #{subs_name}"
     content = render_GPA(scores, gpas)
     send_out(subs_email, subject, content)
     puts "\033[032;1mGPA已发送到邮箱！\033[0m"
   end
 
   def send_calendar(subs_email, ics_path, subs_name = '')
-    subject = "课程表订阅#{'——' + subs_name unless subs_name.empty?}"
-    content = "请下载附件使用日历app打开，如果问是否新建日历请选择YES。"
+    subject = "课程表订阅 #{subs_name}"
+    content = "请下载附件使用日历app导入，建议使用新建日历，以免和原有日程混乱。"
     send_out(subs_email, subject, content, ics_path)
     puts "\033[032;1m课程表已发送到邮箱！\033[0m"
   end
@@ -47,7 +47,6 @@ class Email
         end
       end
       mail.add_file(attachment) if attachment
-      mail.delivery_method :sendmail
       mail.deliver
     end
 
@@ -56,11 +55,12 @@ class Email
       account = @account
       password = @password
       Mail.defaults do
-        delivery_method :smtp,  address: smtp_server,
-                                port: 25,
-                                user_name: account,
-                                password: password,
-                                enable_ssl: true
+        delivery_method :smtp,
+          address: smtp_server,
+          port: 25,
+          user_name: account,
+          password: password,
+          enable_ssl: true
       end
     end
 

@@ -19,8 +19,8 @@ loop do
   profiles.each do |pro|
     account = pro['account'].to_s
     password = pro['password'].to_s
-    subs_email = pro['subs_email']
-    subs_name = pro['subs_name']
+    subs_email = pro['subs_email'].to_s
+    subs_name = pro['subs_name'].to_s
     begin
       req = Request.new(account, password)
       req.download_score

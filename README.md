@@ -61,7 +61,7 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
   ```
 
 6. 运行`get_GPA.rb`，直接获取所有GPA和课程成绩，发送到邮箱
-7. 运行`get_calendar.rb`，获取本学期课程表日历文件
+7. 运行`get_calendar.rb`，获取本学期课程表日历文件，发送到邮箱
 
 ## TODO
 
