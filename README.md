@@ -1,4 +1,5 @@
 ## 简介
+
 利用Ruby编写爬虫，自动登陆我们学校的教务系统，获取成绩页面，得到成绩数据，并格式化输出，自动计算绩点等。
 
 具体原理可参考[我的博客](http://www.jasonsi.com/2016/03/29/3/)
@@ -6,6 +7,7 @@
 Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannnylo/rtesseract)
 
 ## 使用方式
+
 1. 安装Tesseract-ocr
 
   ```bash
@@ -58,7 +60,8 @@ Tesseract相关配置可参考[RTesseract使用文档](https://github.com/dannny
   ruby index.rb
   ```
 
-6. 另外，可单独运行`get_GPA.rb`，直接获取所有GPA和课程成绩
+6. 运行`get_GPA.rb`，直接获取所有GPA和课程成绩，发送到邮箱
+7. 运行`get_calendar.rb`，获取本学期课程表日历文件
 
 ## TODO
 

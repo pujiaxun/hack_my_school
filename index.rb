@@ -1,9 +1,8 @@
 require 'yaml'
-require './request.rb'
-require './score.rb'
-require './email.rb'
+require './lib/request.rb'
+require './lib/score.rb'
+require './lib/email.rb'
 
-include Email
 SLEEP_TIME = 7 * 60
 
 begin
@@ -13,6 +12,8 @@ rescue
   puts '未找到账号密码，请新建account.yml并存入账号密码'
   exit
 end
+
+mailer = Email.new
 
 loop do
   profiles.each do |pro|
@@ -47,7 +48,7 @@ loop do
       puts "\033[032;1m有新的成绩！！！\033[0m"
       unless subs_email.nil?
         begin
-          send_email(subs_email, current_score.last, gpas.last, subs_name, diff)
+          mailer.send_score(subs_email, current_score.last, gpas.last, subs_name, diff)
         rescue
           puts "\033[31;1m邮件发送失败，请检查邮箱是否正确!\033[0m"
           next

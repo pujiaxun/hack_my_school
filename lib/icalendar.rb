@@ -1,8 +1,8 @@
 class ICalendar
-  def initialize(cal_name = '课程表' + Time.now.to_i.to_s)
+  def initialize(cal_name = '课程表' + Time.now.to_i.to_s, color = '#F64F00FF')
     @version = 2.0
     @x_wr_calname = cal_name
-    @x_apple_calendar_color = '#F64F00FF'
+    @x_apple_calendar_color = color
     @tzid = 'Asia/Shanghai'
     @x_lic_location = 'Asia/Shanghai'
     @events = []
@@ -52,7 +52,7 @@ RRULE:#{e[:rrule]}
 END:VEVENT
       FOO
     end
-    events_cal.join ""
+    events_cal.join
   end
 
   def gen_footer

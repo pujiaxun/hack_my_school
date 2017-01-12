@@ -1,12 +1,12 @@
 require 'yaml'
-require './request.rb'
-require './schedule.rb'
-require './email.rb'
-require './icalendar.rb'
+require './lib/request.rb'
+require './lib/schedule.rb'
+require './lib/email.rb'
+require './lib/icalendar.rb'
 
 include Email
 
-start_time_of_class = [8 * 3600,
+START_TIME_OF_CLASS = [8 * 3600,
                       8 * 3600 + 50 * 60,
                       9 * 3600 + 50 * 60,
                       10 * 3600 + 40 * 60,
@@ -18,7 +18,7 @@ start_time_of_class = [8 * 3600,
                       18 * 3600 + 30 * 60,
                       19 * 3600 + 20 * 60,
                       20 * 3600 + 10 * 60]
-end_time_of_class = [8 * 3600 + 45 * 60,
+END_TIME_OF_CLASS = [8 * 3600 + 45 * 60,
                     9 * 3600 + 35 * 60,
                     10 * 3600 + 35 * 60,
                     11 * 3600 + 25 * 60,
@@ -40,8 +40,17 @@ rescue
   exit
 end
 
-start_day_string = '20170220'
-start_day = Time.parse start_day_string
+default_start_day_string = '20170220'
+begin
+  puts "请输入开学上课日期，格式：#{default_start_day_string}，直接回车以使用默认值："
+  start_day_string = gets.chomp.strip
+  start_day_string = default_start_day_string if start_day_string.empty?
+  start_day = Time.parse(start_day_string)
+rescue ArgumentError
+  puts "输入的参数无法解析出正确的日期"
+  retry
+end
+
 start_weekday = start_day.wday
 
 profiles.each do |pro|
@@ -69,8 +78,8 @@ profiles.each do |pro|
 
       # The value is the time at 0 o'clock on that day
       that_day = start_day + ((start_week - 1) * 7 + f[:weekday] - start_weekday) * 24 * 3600
-      s_time = that_day + start_time_of_class[f[:order] - 1]
-      e_time = that_day + end_time_of_class[f[:order] + f[:count] - 2]
+      s_time = that_day + START_TIME_OF_CLASS[f[:order] - 1]
+      e_time = that_day + END_TIME_OF_CLASS[f[:order] + f[:count] - 2]
       event = {
         summary: f[:name],
         location: f[:place]+f[:classroom],
