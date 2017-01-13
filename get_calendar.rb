@@ -5,8 +5,8 @@ require './lib/email.rb'
 require './lib/icalendar.rb'
 
 START_TIME_OF_CLASS = [8 * 3600,
-                      8 * 3600 + 50 * 60,
-                      9 * 3600 + 50 * 60,
+                      8  * 3600 + 50 * 60,
+                      9  * 3600 + 50 * 60,
                       10 * 3600 + 40 * 60,
                       11 * 3600 + 30 * 60,
                       14 * 3600,
@@ -17,7 +17,7 @@ START_TIME_OF_CLASS = [8 * 3600,
                       19 * 3600 + 20 * 60,
                       20 * 3600 + 10 * 60]
 END_TIME_OF_CLASS = [8 * 3600 + 45 * 60,
-                    9 * 3600 + 35 * 60,
+                    9  * 3600 + 35 * 60,
                     10 * 3600 + 35 * 60,
                     11 * 3600 + 25 * 60,
                     12 * 3600 + 15 * 60,
@@ -44,7 +44,7 @@ begin
   start_day_string = default_start_day_string if start_day_string.empty?
   start_day = Time.parse(start_day_string)
 rescue ArgumentError
-  puts "输入的参数无法解析出正确的日期"
+  puts "无法解析出正确的日期"
   retry
 end
 
@@ -68,21 +68,21 @@ profiles.each do |pro|
   courses.each do |f|
     # I found that some courses have two apart phases in a semester
     f[:week].each do |w|
-      start_week = w.split('-').first.to_i
-      end_week = w.split('-').last.to_i
-      repeat = end_week - start_week + 1
+      class_start_week = w.split('-').first.to_i
+      class_end_week = w.split('-').last.to_i
+      repeat = class_end_week - class_start_week + 1
       desc = ["任课教师：#{f[:teacher].join('/')}",
               "课程类型：#{f[:prop]}",
               "学分：#{f[:credit]}",
               "考试类型：#{f[:exam]}"].join('\n')
 
       # The value is the time at 0 o'clock on that day
-      that_day = start_day + ((start_week - 1) * 7 + f[:weekday] - start_weekday) * 24 * 3600
+      that_day = start_day + ((class_start_week - 1) * 7 + f[:weekday] - start_weekday) * 24 * 3600
       s_time = that_day + START_TIME_OF_CLASS[f[:order] - 1]
       e_time = that_day + END_TIME_OF_CLASS[f[:order] + f[:count] - 2]
       event = {
         summary: f[:name],
-        location: f[:place]+f[:classroom],
+        location: f[:place] + f[:classroom],
         rrule: "FREQ=WEEKLY;COUNT=#{repeat}",
         description: desc,
         start_time: s_time.strftime("%Y%m%dT%H%M%S"),

@@ -1,5 +1,7 @@
 class ICalendar
-  def initialize(cal_name = '课程表' + Time.now.to_i.to_s, color = '#F64F00FF')
+
+  # Adding the timestamp to the name of calendar is for avoiding confusion
+  def initialize(cal_name = "课程表#{Time.now.to_i}", color = '#F64F00FF')
     @version = 2.0
     @x_wr_calname = cal_name
     @x_apple_calendar_color = color
@@ -8,7 +10,7 @@ class ICalendar
     @events = []
   end
 
-  def add_event(options={})
+  def add_event(options = {})
     default_event = {
       start_time: '20170420T080000',
       end_time: '20170420T093500',

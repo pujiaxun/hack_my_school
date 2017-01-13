@@ -3,7 +3,7 @@ require 'byebug'
 
 # This class is response for parsing HTML into scores and calculating GPA
 class Schedule
-  REAL_ORDER = [0,1,3,6,8,10]
+  REAL_ORDER = [0, 1, 3, 6, 8, 10]
 
   attr_reader :courses
 
@@ -19,12 +19,12 @@ class Schedule
     def parse_course
       page = Nokogiri::HTML(open(@schedule_file).read, nil, 'gbk')
       raws = page.css('tr.odd')
-      noko_courses=[]
+      noko_courses = []
       raws.each do |x|
         if x.children.length > 20
           noko_courses << x.children
         else
-          noko_courses << (noko_courses.last.slice(0..(-x.children.length-1)) + x.children)
+          noko_courses << (noko_courses.last.slice(0..(-x.children.length - 1)) + x.children)
         end
       end
 
