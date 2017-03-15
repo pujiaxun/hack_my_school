@@ -61,6 +61,18 @@ class Score
       end
     end
 
+    def english_grade(grade)
+      case grade
+      when '优秀' then 'A+'
+      when '良好' then 'A'
+      when '中等' then 'B'
+      when '及格' then 'C'
+      when '不及格' then 'D'
+      else
+        grade
+      end
+    end
+
     # rubocop:disable Metrics/AbcSize
     def parse_score
       page = Nokogiri::HTML(open(@guide_score_file).read, nil, 'gbk')
@@ -79,8 +91,9 @@ class Score
       subjects.each do |m|
         vals = [5, 7, 9, 11, 13].map { |i| m.children[i].text.gsub("\u00A0", "").strip }
         vals[2] = vals[2].to_f
+        vals << english_grade(vals[4])
         vals << calc_point(vals[4])
-        keys = [:name, :eng_name, :credit, :prop, :grade, :point]
+        keys = [:name, :eng_name, :credit, :prop, :grade, :eng_grade, :point]
         @credit_list << Hash[keys.zip vals]
       end
     end

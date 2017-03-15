@@ -51,3 +51,25 @@
     <% end %>
   </tbody>
 </table>
+<hr>
+<h4>GPA of this semester: <%= @gpa[:gpa] %></h4>
+<table>
+  <thead>
+    <th>Course Name</th>
+    <th>Credit</th>
+    <th>Grade</th>
+    <th>GPA</th>
+    <th>Prop</th>
+  </thead>
+  <tbody>
+    <% @scores.each do |s| %>
+    <tr class="<%= 'diff' if @diff.include? s[:name] %>" >
+      <td><%= s[:eng_name] %></td>
+      <td><%= s[:credit] %></td>
+      <td><%= s[:eng_grade] %></td>
+      <td><%= s[:point] %></td>
+      <td><%= s[:prop] == '必修' ? 'required' : 'elective' %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

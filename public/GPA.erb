@@ -27,10 +27,13 @@
 
 </style>
 
+<h1>提供中英文版本</h1>
+
+<hr>
+
 <% @gpas.each_with_index do |g, i| %>
   <p><%= "第#{i + 1}学期的GPA：#{g[:gpa]}，总学分：#{g[:credit]}"%></p>
 <% end %>
-<hr>
 
 <% @gpas.each_with_index do |g, i| %>
   <% next if i % 2 == 0 %>
@@ -38,13 +41,11 @@
   <% gpa = ((g[:gpa] * g[:credit] + @gpas[i-1][:gpa] * @gpas[i-1][:credit]) / credit).round(3) %>
   <p><%= "第#{(i + 1)/2}年的GPA：#{gpa}，总学分：#{credit}"%></p>
 <% end %>
-<hr>
 
 <% point = @gpas.inject(0){ |res, g| res + g[:gpa] * g[:credit] }%>
 <% credit = @gpas.inject(0){ |res, g| res + g[:credit] }%>
 <% gpa = (point / credit).round(3) %>
 <p><%= "总GPA：#{gpa}，总学分：#{credit}"%></p>
-<hr>
 
 <% @scores.each do |ts| %>
   <table>
@@ -63,6 +64,36 @@
           <td><%= s[:grade] %></td>
           <td><%= s[:point] %></td>
           <td><%= s[:prop] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br>
+  <br>
+<% end %>
+
+<hr>
+
+<p><%= "GPA: #{gpa} Credit: #{credit}"%></p>
+
+
+<% @scores.each do |ts| %>
+  <table>
+    <thead>
+      <th>Course Name</th>
+      <th>Credit</th>
+      <th>Grade</th>
+      <th>GPA</th>
+      <th>Prop</th>
+    </thead>
+    <tbody>
+      <% ts.each do |s| %>
+        <tr>
+          <td><%= s[:eng_name] %></td>
+          <td><%= s[:credit] %></td>
+          <td><%= s[:eng_grade] %></td>
+          <td><%= s[:point] %></td>
+          <td><%= s[:prop] == '必修' ? 'required' : 'elective' %></td>
         </tr>
       <% end %>
     </tbody>
