@@ -1,75 +1,64 @@
-<% @border_color = "rgb(182, 182, 182)" %>
+<body style="margin: 0; padding: 0;font-family: verdana,arial,sans-serif;color: #333;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td>
+                <h2>GPA: <%= @gpa[:gpa] %></h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                    <tr>
+                        <td>
+                          <table>
+                              <thead>
+                                  <th>课程名</th>
+                                  <th>学分</th>
+                                  <th>得分</th>
+                                  <th>绩点</th>
+                                  <th>属性</th>
+                              </thead>
+                              <tbody>
+                                  <% @scores.each do |s| %>
+                                  <tr style="<%= 'color: #28bea0;' if @diff.include? s[:name] %>">
+                                      <td><%= s[:name] %></td>
+                                      <td><%= s[:credit] %></td>
+                                      <td><%= s[:grade] %></td>
+                                      <td><%= s[:point] %></td>
+                                      <td><%= s[:prop] %></td>
+                                  </tr>
+                                  <% end %>
+                              </tbody>
+                          </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          <table>
+                              <thead>
+                                  <th>Course Name</th>
+                                  <th>Credit</th>
+                                  <th>Grade</th>
+                                  <th>GPA</th>
+                                  <th>Prop</th>
+                              </thead>
+                              <tbody>
+                                  <% @scores.each do |s| %>
+                                  <tr style="<%= 'color: #28bea0;' if @diff.include? s[:name] %>">
+                                      <td><%= s[:eng_name] %></td>
+                                      <td><%= s[:credit] %></td>
+                                      <td><%= s[:eng_grade] %></td>
+                                      <td><%= s[:point] %></td>
+                                      <td><%= s[:prop] == '必修' ? 'required' : 'elective' %></td>
+                                  </tr>
+                                  <% end %>
+                              </tbody>
+                          </table>
 
-<style type="text/css">
-  table {
-    font-family: verdana,arial,sans-serif;
-    font-size: 11px;
-    color: #333;
-    border-width: 1px;
-    border-color: <%= @border_color %>;
-    border-collapse: collapse;
-  }
-  table th {
-    border-width: 1px;
-    padding: 5px;
-    border-style: solid;
-    border-color: <%= @border_color %>;
-  }
-  table td {
-    border-width: 1px;
-    padding: 5px;
-    border-style: solid;
-    border-color: <%= @border_color %>;
-  }
-  tr {
-    text-align: center;
-  }
-  .diff {
-    font-weight: bold;
-  }
-
-</style>
-
-<h4>本学期绩点为：<%= @gpa[:gpa] %></h4>
-<table>
-  <thead>
-    <th>课程名</th>
-    <th>学分</th>
-    <th>得分</th>
-    <th>绩点</th>
-    <th>课程属性</th>
-  </thead>
-  <tbody>
-    <% @scores.each do |s| %>
-    <tr class="<%= 'diff' if @diff.include? s[:name] %>" >
-      <td><%= s[:name] %></td>
-      <td><%= s[:credit] %></td>
-      <td><%= s[:grade] %></td>
-      <td><%= s[:point] %></td>
-      <td><%= s[:prop] %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
-<hr>
-<h4>GPA of this semester: <%= @gpa[:gpa] %></h4>
-<table>
-  <thead>
-    <th>Course Name</th>
-    <th>Credit</th>
-    <th>Grade</th>
-    <th>GPA</th>
-    <th>Prop</th>
-  </thead>
-  <tbody>
-    <% @scores.each do |s| %>
-    <tr class="<%= 'diff' if @diff.include? s[:name] %>" >
-      <td><%= s[:eng_name] %></td>
-      <td><%= s[:credit] %></td>
-      <td><%= s[:eng_grade] %></td>
-      <td><%= s[:point] %></td>
-      <td><%= s[:prop] == '必修' ? 'required' : 'elective' %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
