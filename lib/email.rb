@@ -60,7 +60,7 @@ class Email
           port: 25,
           user_name: account,
           password: password,
-          enable_ssl: true
+          enable_ssl: false
       end
     end
 
