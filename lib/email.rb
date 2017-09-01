@@ -57,10 +57,11 @@ class Email
       Mail.defaults do
         delivery_method :smtp,
           address: smtp_server,
-          port: 25,
+          port: 465,
           user_name: account,
           password: password,
-          enable_ssl: false
+          enable_ssl: true,
+          ssl: true
       end
     end
 
