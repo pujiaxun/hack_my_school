@@ -1,12 +1,12 @@
 ## 简介
 
-利用 Ruby 简洁的特性编写爬虫，自动登陆我们学校的教务系统，获取成绩页面，得到成绩数据并格式化输出，自动计算绩点，自动生成课表等。
+利用 Ruby 简洁的特性编写爬虫，自动登陆河海大学的教务系统，获取成绩页面，得到成绩数据并格式化输出，自动计算绩点，自动生成课表等。
 
 具体原理可参考我写的文章：
 
-- [Ruby+Tesseract 爬取学校教务系统](http://www.jasonsi.com/2016/03/29/3/)
-- [Ruby 爬虫实现成绩订阅功能](http://www.jasonsi.com/2016/06/17/12/)
-- [Ruby 爬取教务系统生成课程表](http://www.jasonsi.com/2017/01/12/30/)
+- [Ruby+Tesseract 爬取学校教务系统](https://pujiaxun.com/2016/03/29/3/)
+- [Ruby 爬虫实现成绩订阅功能](https://pujiaxun.com/2016/06/17/12/)
+- [Ruby 爬取教务系统生成课程表](https://pujiaxun.com/2017/01/12/30/)
 
 Tesseract 相关配置可参考[RTesseract 使用文档](https://github.com/dannnylo/rtesseract)
 
